@@ -20,17 +20,28 @@ import android.widget.Toast;
 //import com.github.mikephil.charting.charts.LineChart;
 //import com.github.mikephil.charting.data.ChartData;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import cz.msebera.android.httpclient.Header;
+
 public class MoneyManage extends AppCompatActivity {
 
     private BillDBOperator mDBOperator;
     private ArrayList<BillVO> mDayBill;
     private ArrayList<BillVO> mMonthBill;
+    private ArrayList<BillVO> mBillList = new ArrayList<BillVO>();
+    private long[] mCloudIncome = new long[2];
+    private long[] mCloudExpend = new long[2];
     /**
      * index == 0 --> day accumulation
      * index == 1 --> month accumulation
@@ -100,17 +111,10 @@ public class MoneyManage extends AppCompatActivity {
             }
         }
 
-        profit = mTotalIncome[1] - mTotalExpend[1];
-        TextView viewOfIncome = (TextView)findViewById(R.id.income_this_month);
-        TextView viewOfExpend = (TextView)findViewById(R.id.expend_this_month);
-        TextView viewOfProfit = (TextView)findViewById(R.id.accumulateProfit);
-        TextView viewOfDayIncome = (TextView)findViewById(R.id.day_income);
-        TextView viewOfDayExpend = (TextView)findViewById(R.id.day_expend);
-        viewOfDayExpend.setText(mTotalExpend[0] + "");
-        viewOfDayIncome.setText(mTotalIncome[0] + "");
-        viewOfIncome.setText(mTotalIncome[1] + "");
-        viewOfExpend.setText(mTotalExpend[1] + "");
-        viewOfProfit.setText(profit + "");
+        getFromCloud(User.userDownloadBill(), thisMonth, today);
+
+
+
     }
 
     @Override
@@ -144,5 +148,104 @@ public class MoneyManage extends AppCompatActivity {
         return pattern.matcher(str).matches();
     }
 
+    /* 从云端获取 */
+    private void getFromCloud(RequestParams params, final int thisMonth, final int today) {
+
+        /* 发送到的url */
+        String url = "getbill/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "30000":
+                            JSONObject list = response.getJSONObject("list");
+
+                            for(int i = 0; i < list.length(); i++) {
+                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
+
+                                Integer billId = ith.getInt("id");
+                                Integer year = ith.getInt("year");
+                                Integer month = ith.getInt("month");
+                                Integer day = ith.getInt("day");
+                                Integer income = ith.getInt("income");
+                                String incomeSource = ith.getString("incomeSource");
+                                Integer expend = ith.getInt("expend");
+                                String expendDes = ith.getString("expendDes");
+                                String backup = ith.getString("backup");
+
+                                BillVO billVO = new BillVO();
+                                billVO.setBillId(billId);
+                                billVO.setLocal(false);
+                                billVO.setYear(year);
+                                billVO.setMonth(month);
+                                billVO.setDay(day);
+                                billVO.setIncome(income);
+                                billVO.setIncomeSource(incomeSource);
+                                billVO.setExpend(expend);
+                                billVO.setExpendDes(expendDes);
+                                billVO.setBackup(backup);
+                                mBillList.add(billVO);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(MoneyManage.this, "exception", Toast.LENGTH_SHORT).show();
+                }
+                if (mBillList != null) {
+                    for (int i = 0; i < mBillList.size(); ++ i) {
+                        BillVO nmb = mBillList.get(i);
+                        if (nmb.getMonth() == thisMonth) {
+                            mTotalIncome[1] += nmb.getIncome();
+                            mTotalExpend[1] += nmb.getExpend();
+                        }
+                        if (nmb.getDay() == today) {
+                            mTotalIncome[0] += nmb.getIncome();
+                            mTotalExpend[0] += nmb.getExpend();
+                        }
+                    }
+                }
+                profit = mTotalIncome[1] - mTotalExpend[1];
+
+                displayContent();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                if(User.mLoggedIn) {
+                    /* 超时提示 */
+                    Toast.makeText(MoneyManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    public void displayContent() {
+        TextView viewOfIncome = (TextView)findViewById(R.id.income_this_month);
+        TextView viewOfExpend = (TextView)findViewById(R.id.expend_this_month);
+        TextView viewOfProfit = (TextView)findViewById(R.id.accumulateProfit);
+        TextView viewOfDayIncome = (TextView)findViewById(R.id.day_income);
+        TextView viewOfDayExpend = (TextView)findViewById(R.id.day_expend);
+
+        viewOfDayExpend.setText(mTotalExpend[0] + "");
+        viewOfDayIncome.setText(mTotalIncome[0] + "");
+        viewOfIncome.setText(mTotalIncome[1] + "");
+        viewOfExpend.setText(mTotalExpend[1] + "");
+        viewOfProfit.setText(profit + "");
+    }
 
 }

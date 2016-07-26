@@ -144,7 +144,9 @@ public class Bill extends AppCompatActivity {
         if(temp != null) {
             mBillList.addAll(temp);
         }
-        getFromCloud(User.userDownloadBill());
+        if (User.mLoggedIn){
+            getFromCloud(User.userDownloadBill());
+        }
         arrayAdapter.notifyDataSetChanged();
 
     }

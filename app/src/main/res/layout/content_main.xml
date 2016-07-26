@@ -10,20 +10,6 @@
     android:fitsSystemWindows="true"
     tools:showIn="@layout/app_bar_main">
 
-<!--    <ScrollView
-        android:background="@drawable/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:scrollbars="none"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-
-
-    </ScrollView>-->
 
     <LinearLayout
         android:paddingBottom="50dp"
@@ -32,6 +18,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/background"
+
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -78,50 +65,7 @@
             android:layout_weight="0.8"
             android:layout_height="0dp" />
 
-        <!--            <android.support.v7.widget.CardView
-                        android:layout_marginTop="10dp"
-                        app:cardCornerRadius="8dp"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent" >
 
-                        <HorizontalScrollView
-                            android:scrollbars="none"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-
-
-        &lt;!&ndash;                    <LinearLayout
-                                android:elevation="8dp"
-                                android:orientation="horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal">
-
-
-                                <TextView
-                                    android:padding="12dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="24dp"
-                                    android:text=""
-                                    android:id="@+id/card1"
-                                    android:layout_gravity="center_horizontal|top" />
-
-                                <TextView
-                                    android:gravity="center_horizontal"
-                                    android:text="text"
-                                    android:layout_weight="2"
-                                    android:id="@+id/card2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp" />
-
-                            </LinearLayout>&ndash;&gt;
-
-                        </HorizontalScrollView>
-
-
-                    </android.support.v7.widget.CardView>-->
 
     </LinearLayout>
 

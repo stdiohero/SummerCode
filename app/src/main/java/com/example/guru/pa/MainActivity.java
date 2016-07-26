@@ -313,14 +313,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.nav_money:
-                if(!User.mLoggedIn) {
-                    Toast.makeText(MainActivity.this, "请登录以查看", Toast.LENGTH_SHORT).show();
-                    Intent intent1 = new Intent(MainActivity.this, LogIn.class);
-                    startActivity(intent1);
-                } else {
-                    Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
-                    startActivity(intent1);
-                }
+                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                startActivity(intent1);
                 return true;
             case R.id.nav_password:
                 if(!User.mLoggedIn) {
