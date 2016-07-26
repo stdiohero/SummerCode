@@ -184,9 +184,13 @@ public class Bill extends AppCompatActivity {
         @Override
         public boolean onQueryTextSubmit(String query) {
             //action when press button search
-            arrayAdapter.clear();
-            mBillList = mDBOperator.getBillByContent(query);
-            arrayAdapter.addAll(mBillList);
+            //arrayAdapter.clear();
+            mBillList.clear();
+            ArrayList<BillVO> temp = mDBOperator.getBillByContent(query);
+            if(temp != null) {
+                mBillList.addAll(temp);
+            }
+            //arrayAdapter.addAll(mBillList);
             arrayAdapter.notifyDataSetChanged();
             return true;
         }

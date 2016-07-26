@@ -19,6 +19,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.AnalogClock;
 import android.widget.ArrayAdapter;
 import android.widget.StackView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.special.ResideMenu.ResideMenuItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Schedule> mJourneyList;
     private StackView mStackView;
     private JourneyAdapter mJourneyAdapter;
+    private TextView mTextView;
 
 
 
@@ -110,6 +113,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTextView = (TextView) findViewById(R.id.textview1);
 
         User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
         User.userSet();
@@ -162,6 +167,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        Date curDate = new Date(System.currentTimeMillis());
+        int curHour = curDate.getHours();
+
+        if(curHour < 12) {
+            mTextView.setText("早上好");
+        } else if(curHour > 12 && curHour < 19) {
+            mTextView.setText("下午好");
+        } else {
+            mTextView.setText("晚上好");
+        }
+
         if(cir!=null){
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
             tv.setText(User.mUsername);
