@@ -3,10 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:paddingTop="10dp"
     tools:context="com.example.guru.pa.Bill">
 
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:scrollbars="none"
+        android:divider="#000000"
         android:id="@+id/bill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

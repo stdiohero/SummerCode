@@ -4,7 +4,7 @@
     xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/colorPrimary"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:id="@+id/reg_username"
         android:layout_marginTop="99dp"
-        android:background="@color/White"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="16dp"
@@ -33,11 +33,13 @@
             android:layout_height="match_parent" />
 
         <EditText
+            android:textColor="@color/White"
+            android:textColorHint="#bdc3c7"
             android:paddingLeft="15px"
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="9"
-            android:background="@color/White"
+            android:background="@android:color/transparent"
             android:maxLength="32"
             android:inputType="text"
             android:digits="0123456789qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM"
@@ -51,16 +53,16 @@
     <LinearLayout
         android:orientation="horizontal"
         android:id="@+id/reg_password1"
-        android:layout_below="@+id/reg_username"
-        android:layout_alignLeft="@+id/reg_username"
-        android:layout_alignStart="@+id/reg_username"
-        android:background="@color/White"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="29dp"
-        android:layout_marginRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2">
 
         <ImageView
             android:src="@drawable/lock"
@@ -70,8 +72,9 @@
             android:layout_height="match_parent" />
 
         <EditText
+            android:textColor="@color/White"
             android:paddingLeft="15px"
-            android:background="@color/White"
+            android:background="@android:color/transparent"
             android:layout_width="0dp"
             android:layout_weight="9"
             android:layout_height="match_parent"
@@ -80,6 +83,7 @@
             android:ems="10"
             android:id="@+id/reg_password1_edit"
             android:hint="请输入密码"
+            android:textColorHint="#bdc3c7"
             />
     </LinearLayout>
 
@@ -87,16 +91,16 @@
     <LinearLayout
         android:orientation="horizontal"
         android:id="@+id/reg_password2"
-        android:layout_below="@+id/reg_password1"
-        android:layout_alignLeft="@+id/reg_password1"
-        android:layout_alignStart="@+id/reg_password1"
-        android:background="@color/White"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="29dp"
-        android:layout_marginRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3">
 
         <ImageView
             android:src="@drawable/lock"
@@ -106,8 +110,9 @@
             android:layout_height="match_parent" />
 
         <EditText
+            android:textColor="@color/White"
             android:paddingLeft="15px"
-            android:background="@color/White"
+            android:background="@android:color/transparent"
             android:layout_width="0dp"
             android:layout_weight="9"
             android:layout_height="match_parent"
@@ -116,6 +121,7 @@
             android:ems="10"
             android:id="@+id/reg_password2_edit"
             android:hint="再次输入密码"
+            android:textColorHint="#bdc3c7"
             />
     </LinearLayout>
 
@@ -150,6 +156,28 @@
         flatui:fl_theme="@array/custom_theme"
         flatui:fl_touchEffect="fl_ripple"
         flatui:fl_blockButtonEffectHeight="3dp"/>
+
+    <TextView
+        android:background="@color/White"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/reg_username"
+        android:layout_alignRight="@+id/reg_username"
+        android:layout_alignEnd="@+id/reg_username"
+        android:layout_alignLeft="@+id/reg_username"
+        android:layout_alignStart="@+id/reg_username" />
+
+    <TextView
+        android:background="@color/White"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/reg_password1"
+        android:layout_alignRight="@+id/reg_password1"
+        android:layout_alignEnd="@+id/reg_password1"
+        android:layout_alignLeft="@+id/reg_password1"
+        android:layout_alignStart="@+id/reg_password1" />
 
 
 </RelativeLayout>

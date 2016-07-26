@@ -36,7 +36,7 @@
         <activity
             android:name=".LogIn"
             android:label="@string/title_activity_log_in"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MoneyManage"
             android:label="@string/title_activity_money_manage"
@@ -61,6 +61,7 @@
             android:name=".AddBill"
             android:label="编辑账单" />
         <activity
+            android:theme="@style/AppTheme.NoActionBar"
             android:name=".Register"
             android:label="注册" />
         <activity

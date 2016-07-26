@@ -57,9 +57,9 @@ public class Schedule implements Comparable<Schedule>{
     public int compareTo(Schedule b) {
         int ret = this.getDate().compareTo(b.getDate());
         if (ret == 0) {
-            return this.getTime().compareTo(b.getTime());
+            return -(this.getTime().compareTo(b.getTime()));
         }
         else
-            return ret;
+            return -ret;
     }
 }

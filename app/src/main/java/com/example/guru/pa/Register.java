@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -29,14 +30,16 @@ public class Register extends AppCompatActivity {
     private EditText reg_password1_edit;
     private EditText reg_password2_edit;
     private Button button;
+    private SVProgressHUD mSVProgressHUD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        mSVProgressHUD = new SVProgressHUD(this);
+        //ActionBar actionbar = getSupportActionBar();
+        //actionbar.setDisplayHomeAsUpEnabled(true);
 
         reg_username_edit = (EditText)findViewById(R.id.reg_username_edit);
         reg_password1_edit = (EditText)findViewById(R.id.reg_password1_edit);
@@ -60,6 +63,7 @@ public class Register extends AppCompatActivity {
 
                     /* 用户注册 */
                     onRegist("regist/",User.userRegist(name, password));
+                    mSVProgressHUD.showWithStatus("请等待...");
                 }
             }
         });
@@ -68,7 +72,7 @@ public class Register extends AppCompatActivity {
 
 
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
@@ -79,7 +83,7 @@ public class Register extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /* 注册 */
     private void onRegist(String url, RequestParams params) {
@@ -105,12 +109,17 @@ public class Register extends AppCompatActivity {
                         break;
                 }
 
-                Toast.makeText(Register.this, status+","+res, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, res, Toast.LENGTH_SHORT).show();
+                mSVProgressHUD.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                Toast.makeText(Register.this, "连接超时", Toast.LENGTH_SHORT).show();
+                mSVProgressHUD.dismiss();
+
             }
         });
     }

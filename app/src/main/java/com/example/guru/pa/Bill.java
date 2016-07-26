@@ -58,7 +58,7 @@ public class Bill extends AppCompatActivity {
     private BillDBOperator mDBOperator = null;
     private ArrayList<BillVO> mBillList = null;
     private ArrayList<Integer> mHash = null;
-    private ArrayAdapter<BillVO> arrayAdapter;
+    private BillAdapter arrayAdapter;
     private SwipeMenuListView mListView;
 
     @Override
@@ -74,7 +74,8 @@ public class Bill extends AppCompatActivity {
         mDBOperator = new BillDBOperator(this);
 
         /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<BillVO>(this, android.R.layout.simple_list_item_1, mBillList);
+        //arrayAdapter = new ArrayAdapter<BillVO>(this, android.R.layout.simple_list_item_1, mBillList);
+        arrayAdapter = new BillAdapter(this, mBillList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.bill_list);
@@ -90,7 +91,7 @@ public class Bill extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Open");
+                openItem.setTitle("详情");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -100,7 +101,7 @@ public class Bill extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitle("删除"); /* 未来会换成icon */
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitleColor(Color.WHITE);
                 // 添加到SwipeMenu
@@ -139,8 +140,9 @@ public class Bill extends AppCompatActivity {
         super.onResume();
 
         mBillList.clear();
-        if(mDBOperator.getAllBill() != null) {
-            mBillList.addAll(mDBOperator.getAllBill());
+        ArrayList<BillVO> temp = mDBOperator.getAllBill();
+        if(temp != null) {
+            mBillList.addAll(temp);
         }
         getFromCloud(User.userDownloadBill());
         arrayAdapter.notifyDataSetChanged();

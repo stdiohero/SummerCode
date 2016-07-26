@@ -4,16 +4,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/background"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:weightSum="1"
     tools:context=".LogIn">
 
+    <ImageView
+        android:src="@drawable/ic_p"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageView" />
+
     <LinearLayout
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:id="@+id/username"
-        android:layout_marginTop="99dp"
-        android:background="@color/White"
+        android:layout_marginTop="155dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="16dp"
@@ -31,11 +40,13 @@
             android:layout_height="match_parent" />
 
         <EditText
+            android:textColor="@color/White"
+            android:textColorHint="#bdc3c7"
+            android:background="@android:color/transparent"
             android:paddingLeft="15px"
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="9"
-            android:background="@color/White"
             android:maxLength="32"
             android:inputType="text"
             android:digits="0123456789qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM"
@@ -47,18 +58,19 @@
 
 
     <LinearLayout
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:id="@+id/password"
-        android:layout_below="@+id/username"
-        android:layout_alignLeft="@+id/username"
-        android:layout_alignStart="@+id/username"
-        android:background="@color/White"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="29dp"
-        android:layout_marginRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2">
 
         <ImageView
             android:src="@drawable/lock"
@@ -68,8 +80,10 @@
             android:layout_height="match_parent" />
 
         <EditText
+            android:textColor="@color/White"
+            android:textColorHint="#bdc3c7"
+            android:background="@android:color/transparent"
             android:paddingLeft="15px"
-            android:background="@color/White"
             android:layout_width="0dp"
             android:layout_weight="9"
             android:layout_height="match_parent"
@@ -78,7 +92,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/editText2"
-            android:hint="***********"
+            android:hint="密码"
             />
     </LinearLayout>
 
@@ -120,6 +134,7 @@
         android:gravity="center"
         android:id="@+id/regist"
         android:text="没有账号？"
+        android:textColor="@color/White"
         android:layout_marginTop="38dp"
         android:layout_below="@+id/login"
         android:layout_alignLeft="@+id/login"
@@ -133,11 +148,23 @@
         android:gravity="center"
         android:id="@+id/forgetaccount"
         android:text="忘记密码"
+        android:textColor="@color/White"
         android:layout_alignTop="@+id/regist"
         android:layout_alignRight="@+id/login"
         android:layout_alignEnd="@+id/login"
         android:layout_marginRight="50dp"
         android:layout_marginEnd="50dp" />
+
+    <TextView
+        android:background="@color/White"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/username"
+        android:layout_alignRight="@+id/username"
+        android:layout_alignEnd="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignStart="@+id/username" />
 
 
 </RelativeLayout>

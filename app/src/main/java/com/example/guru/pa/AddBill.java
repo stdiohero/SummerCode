@@ -33,7 +33,7 @@ public class AddBill extends AppCompatActivity {
     private EditText expendText = null;
     private EditText expendDesText = null;
     private EditText mBackupText = null;
-    private CalendarView calendarView = null;
+    private CalendarViewScrollable calendarView = null;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -69,7 +69,7 @@ public class AddBill extends AppCompatActivity {
 
         // 获得当前日历选中的日期
         //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        calendarView = (CalendarView) findViewById(R.id.calendarView);
+        calendarView = (CalendarViewScrollable) findViewById(R.id.calendarView);
        // calendarDate = dateFormat.format(calendarView.getDate());
         mYear = Integer.parseInt((new SimpleDateFormat("yyyy")).format(calendarView.getDate()));
         mMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(calendarView.getDate()));

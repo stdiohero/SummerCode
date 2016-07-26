@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -19,6 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.StackView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,15 +37,11 @@ import cz.msebera.android.httpclient.Header;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    //public static final String FILENAME = "testFile2.txt";
-    //public static final String MESSAGE_JOURNEY = "pa.scheduleId";
-    //public static final String MESSAGE_BILL = "pa.billId";
     private static final long A_MINUTE = 1000 * 60;
     public static final long[] INTERVAL_MILLS = {
             -1,
@@ -55,16 +53,13 @@ public class MainActivity extends AppCompatActivity
             AlarmManager.INTERVAL_DAY,
             AlarmManager.INTERVAL_DAY * 7,
     };
-    public static SubActionButton button1;
-    public static SubActionButton button2;
-    public static SubActionButton button3;
     private  ResideMenu mResideMenu;
-    //public static Boolean LOGGEDIN = false;
-    //public static String USERNAME;
     private ResideMenuItem item[];
     private View cir;
     private DataBaseOperator mJourneyDB;
     private ArrayList<Schedule> mJourneyList;
+    private StackView mStackView;
+    private JourneyAdapter mJourneyAdapter;
 
 
 
@@ -119,7 +114,17 @@ public class MainActivity extends AppCompatActivity
         User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
         User.userSet();
 
+        mStackView = (StackView) findViewById(R.id.main_stackview);
+        mJourneyList = new ArrayList();
+        mJourneyAdapter = new JourneyAdapter(this, mJourneyList);
+        mStackView.setAdapter(mJourneyAdapter);
 
+        mStackView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToJourneyDetail(mJourneyList.get(position).getScheduleId());
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -171,20 +176,18 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(new Date());
         mJourneyDB = new DataBaseOperator(this);
-        mJourneyList = mJourneyDB.getScheduleBydate(date);
-        TextView card1 = (TextView)findViewById(R.id.card2);
-        TextView card2 = (TextView)findViewById(R.id.card3);
-        card1.setText("");
-        card2.setText("");
-        if (mJourneyList != null) {
-            card1.setText(mJourneyList.get(0).toString());
+        //mJourneyList = ;
+        mJourneyList.clear();
+        if(mJourneyDB.getAllSchedule() == null) {
+            Schedule schedule = new Schedule();
+            schedule.setDate("没有日程了");
+            schedule.setTime("没有日程了");
+            schedule.setContent("没有日程了");
+            mJourneyList.add(schedule);
+        } else {
+            mJourneyList.addAll(mJourneyDB.getAllSchedule());
         }
-        if (mJourneyList != null && mJourneyList.size() > 1) {
-            card2.setText(mJourneyList.get(1).toString());
-        }
-        card1.setOnClickListener(handler(0));
-        card2.setOnClickListener(handler(1));
-
+        mJourneyAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -293,12 +296,25 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.nav_money:
-                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
-                startActivity(intent1);
+                if(!User.mLoggedIn) {
+                    Toast.makeText(MainActivity.this, "请登录以查看", Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(MainActivity.this, LogIn.class);
+                    startActivity(intent1);
+                } else {
+                    Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                    startActivity(intent1);
+                }
                 return true;
             case R.id.nav_password:
-                Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
-                startActivity(intent2);
+                if(!User.mLoggedIn) {
+                    Toast.makeText(MainActivity.this, "请登录以查看", Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(MainActivity.this, LogIn.class);
+                    startActivity(intent2);
+                } else {
+                    Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
+                    startActivity(intent2);
+                }
+
                 return true;
             case R.id.nav_settings:
                 Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
@@ -311,48 +327,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /* 登出 */
-    private void onLogOut(String url, RequestParams params) {
 
-        HttpClient.post(url, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                String status = null;
-                String res = "11";
-
-                try {
-                    status = response.getString("status");
-                    res = response.getString("response");
-
-                    switch(status) {
-                        case "10002":
-                            User.userReset();
-                            Intent intent = new Intent(MainActivity.this, LogIn.class);
-                            startActivity(intent);
-                            MainActivity.this.finish();
-                            break;
-                        default:
-                            break;
-                    }
-                } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                Toast.makeText(MainActivity.this, status+","+res, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-    }
-
-
-
-    public void goToJourneyDetail(int sendId) {
+    public void goToJourneyDetail(int id) {
         Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
-        intent.putExtra("pa.journey.manage.detail", sendId);
+        intent.putExtra("pa.journey.manage.detail",id);
         startActivity(intent);
     }
 }

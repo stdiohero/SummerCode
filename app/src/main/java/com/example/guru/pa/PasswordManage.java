@@ -36,7 +36,7 @@ public class PasswordManage extends AppCompatActivity {
 
     private PasswordOperate mPasswordOperate;
     private ArrayList<PasswordMessage> mPMArrayList;
-    private ArrayAdapter<PasswordMessage> arrayAdapter;
+    private PasswordAdapter arrayAdapter;
     private SwipeMenuListView mListView;
 
     @Override
@@ -52,7 +52,7 @@ public class PasswordManage extends AppCompatActivity {
         mPasswordOperate = new PasswordOperate(this);
 
         /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<PasswordMessage>(this, android.R.layout.simple_list_item_1, mPMArrayList);
+        arrayAdapter = new PasswordAdapter(this, mPMArrayList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);
@@ -180,14 +180,19 @@ public class PasswordManage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
             //action when press button search
-            arrayAdapter.clear();
-            mPMArrayList = mPasswordOperate.getAccountByPurpose(query);
-            arrayAdapter.addAll(mPMArrayList);
+            //arrayAdapter.clear();
+            mPMArrayList.clear();
+            ArrayList<PasswordMessage> temp = mPasswordOperate.getAccountByPurpose(query);
+            if(temp != null){
+                mPMArrayList.addAll(temp);
+            }
+            //arrayAdapter.addAll(mPMArrayList);
             arrayAdapter.notifyDataSetChanged();
             return true;
         }

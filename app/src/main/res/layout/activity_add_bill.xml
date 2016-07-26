@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CalendarView
+            <com.example.guru.pa.CalendarViewScrollable
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:id="@+id/calendarView"

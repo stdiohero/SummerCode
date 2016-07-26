@@ -239,6 +239,7 @@ public class AddJourney extends AppCompatActivity {
         schedule.setContent(mScheduleContent);
         schedule.setDate(mGottenDate);
         schedule.setTime(mGottenTime);
+
         if (gottenId > 0) {
             schedule.setScheduleId(gottenId);
             mDBOperator.updateSchedule(schedule);

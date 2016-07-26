@@ -43,7 +43,7 @@ public class JourneyManage extends AppCompatActivity {
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayList<Integer> mHash;
-    private ArrayAdapter<String> arrayAdapter;
+    private JourneyAdapter journeyAdapter;
     private SwipeMenuListView mListView;
     private ArrayList<Schedule> mScheduleArrayList;
     //private ArrayList<TagSchedule> mTagScheduleArrayList;
@@ -61,6 +61,10 @@ public class JourneyManage extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
+        mScheduleArrayList = new ArrayList();
+        mDBOperator = new DataBaseOperator(this);
+        journeyAdapter = new JourneyAdapter(this, mScheduleArrayList);
+
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
 
@@ -75,7 +79,7 @@ public class JourneyManage extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Open");
+                openItem.setTitle("详情");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -85,7 +89,7 @@ public class JourneyManage extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitle("删除"); /* 未来会换成icon */
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitleColor(Color.WHITE);
                 // 添加到SwipeMenu
@@ -94,7 +98,7 @@ public class JourneyManage extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-
+        mListView.setAdapter(journeyAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -108,9 +112,9 @@ public class JourneyManage extends AppCompatActivity {
                         sendId(position);
                         break;
                     case 1:
-                        strs.remove(position);
+                        //strs.remove(position);
                         deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
+                        //journeyAdapter.notifyDataSetChanged();
                         // delete
                         break;
                 }
@@ -126,21 +130,27 @@ public class JourneyManage extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        getFromCloud(User.userDownloadJourney());
+        mScheduleArrayList.clear();
+        if(mDBOperator.getAllSchedule() != null) {
+            mScheduleArrayList.addAll(mDBOperator.getAllSchedule());
+        }
+        journeyAdapter.notifyDataSetChanged();
 
-        mHash = new ArrayList<Integer>();
+        //getFromCloud(User.userDownloadJourney());
+
+        /*mHash = new ArrayList<Integer>();
         strs = new ArrayList<String>();
-        mScheduleArrayList = new ArrayList<Schedule>();
+
         //mTagScheduleArrayList = new ArrayList<TagSchedule>();
         mDBOperator = new DataBaseOperator(this);
         mScheduleArrayList = mDBOperator.getAllSchedule();
 
         displayContent(mScheduleArrayList);
 
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+        *//* 实例化ArrayAdapter *//*
+        journeyAdapter = new JourneyAdapter(this, mScheduleArrayList);
 
-        mListView.setAdapter(arrayAdapter);
+        mListView.setAdapter(journeyAdapter);*/
 
     }
 
@@ -172,15 +182,23 @@ public class JourneyManage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
             //action when press button search
-            mScheduleArrayList = mDBOperator.getScheduleByContent(query);
-            strs.clear();
-            arrayAdapter.notifyDataSetChanged();
-            displayContent(mScheduleArrayList);
+            //mScheduleArrayList = mDBOperator.getScheduleByContent(query);
+            mScheduleArrayList.clear();
+            ArrayList<Schedule> temp = mDBOperator.getScheduleByContent(query);
+            if(temp != null){
+                mScheduleArrayList.addAll(temp);
+            }
+            //arrayAdapter.addAll(mPMArrayList);
+            journeyAdapter.notifyDataSetChanged();
+            //strs.clear();
+            //journeyAdapter.notifyDataSetChanged();
+            //displayContent(mScheduleArrayList);
             return true;
         }
 
@@ -203,9 +221,11 @@ public class JourneyManage extends AppCompatActivity {
                 openJourneySearch();
                 return true;
             case R.id.journey_sort:
-                if (mScheduleArrayList != null &&  mScheduleArrayList.size() > 0){
+                /*if (mScheduleArrayList != null && mScheduleArrayList.size() > 0) {
                     openJourneySort();
-                }
+                }*/
+                Collections.sort(mScheduleArrayList);
+                journeyAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -214,17 +234,24 @@ public class JourneyManage extends AppCompatActivity {
 
 
     public void deleteContent(int position) {
-        int deleteId = mScheduleArrayList.get(position).getScheduleId();
-        mDBOperator.deleteScheduleById(deleteId);
+        //int deleteId = mHash.get(position);
+        //mHash.remove(position);
+        int id = mScheduleArrayList.get(position).getScheduleId();
+        mDBOperator.deleteScheduleById(id);
         mScheduleArrayList.remove(position);
+        journeyAdapter.notifyDataSetChanged();
     }
 
 
     public void sendId(int position) {
-        int sendId = mScheduleArrayList.get(position).getScheduleId();
+        /*int sendId = mHash.get(position);
         Intent  intent = new Intent(this, JourneyDetail.class);
         intent.putExtra("pa.journey.manage.detail", sendId);
 
+        startActivity(intent);*/
+        Schedule schedule = mScheduleArrayList.get(position);
+        Intent  intent = new Intent(this, JourneyDetail.class);
+        intent.putExtra("pa.journey.manage.detail", schedule.getScheduleId());
         startActivity(intent);
     }
 
@@ -240,10 +267,9 @@ public class JourneyManage extends AppCompatActivity {
     }
 
 
-
     public void openJourneySort(){
         strs.clear();
-        arrayAdapter.notifyDataSetChanged();
+        journeyAdapter.notifyDataSetChanged();
         Collections.sort(mScheduleArrayList);
         displayContent(mScheduleArrayList);
     }
@@ -311,7 +337,7 @@ public class JourneyManage extends AppCompatActivity {
                                         +"<云端存储>"
                                 );
                             }
-                            arrayAdapter.notifyDataSetChanged();
+                            journeyAdapter.notifyDataSetChanged();
                             break;
                         default:
                             break;

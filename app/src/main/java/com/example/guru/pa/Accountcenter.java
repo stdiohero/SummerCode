@@ -38,7 +38,7 @@ public class AccountCenter extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Button logout = (Button) findViewById(R.id.account_logout);
+        logout = (Button) findViewById(R.id.account_logout);
         if(logout != null) {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,6 +92,12 @@ public class AccountCenter extends AppCompatActivity {
     /* 登出 */
     private void onLogOut(String url, RequestParams params) {
 
+        Intent intent2 = new Intent(AccountCenter.this, LogIn.class);
+        startActivity(intent2);
+        AccountCenter.this.finish();
+        User.userReset();
+        Toast.makeText(AccountCenter.this, "登出成功", Toast.LENGTH_SHORT).show();
+
         HttpClient.post(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -103,18 +109,14 @@ public class AccountCenter extends AppCompatActivity {
                     res = response.getString("response");
 
                     switch(status) {
-                        case "10002":
-                            User.userReset();
+                        /*case "10002":
+
                             //Intent intent = new Intent(AccountCenter.this, MainActivity.class);
                             //startActivity(intent);
-                            AccountCenter.this.finish();
                             break;
                         case "10004":
                             User.userReset();
-                            Intent intent2 = new Intent(AccountCenter.this, LogIn.class);
-                            startActivity(intent2);
-                            AccountCenter.this.finish();
-                            break;
+                            break;*/
                         default:
                             break;
                     }
@@ -122,7 +124,7 @@ public class AccountCenter extends AppCompatActivity {
                     Toast.makeText(AccountCenter.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                Toast.makeText(AccountCenter.this, status+","+res, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AccountCenter.this, status+","+res, Toast.LENGTH_SHORT).show();
             }
 
             @Override
